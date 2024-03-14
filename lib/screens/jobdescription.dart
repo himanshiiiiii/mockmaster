@@ -41,9 +41,10 @@ class _RoleDescriptionState extends State<RoleDescription> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Enter the profile description to proceed!!", style:GoogleFonts.poppins(
+            child: Text("Enter your preferences to proceed!!", style:GoogleFonts.sora(
               color: Colors.black,
-              fontSize:15,
+              fontWeight: FontWeight.w600,
+              fontSize:16,
             ),),
           ),
           LottieBuilder.asset('lottie/job.json',height: size.height*0.3,),
