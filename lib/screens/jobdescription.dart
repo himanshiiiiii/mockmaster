@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mock_master/screens/questionspage.dart';
+import 'package:mock_master/utils/colors.dart';
 
 class RoleDescription extends StatefulWidget {
   const RoleDescription({Key? key}) : super(key: key);
@@ -10,7 +12,27 @@ class RoleDescription extends StatefulWidget {
 }
 
 class _RoleDescriptionState extends State<RoleDescription> {
+  String _selectedLevel = 'Easy';
+  int select=0;
   @override
+  Widget Questionlevel(int selected,String level,){
+    var size=MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.all(7.0),
+      child: Container( height: (select==selected)?size.height*0.075:size.height*0.065,
+        width: (select==selected)?size.width*0.32:size.width*0.28,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color:(select==selected)?buttonColor:Colors.white,
+            border: Border.all(color: (select==selected)?Colors.purple:Colors.grey,),borderRadius: BorderRadius.circular(20)),
+        child:  Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Text(level, style:GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize:15,
+          ),),
+        ),),
+    );
+  }
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
     return Scaffold(
@@ -18,7 +40,15 @@ class _RoleDescriptionState extends State<RoleDescription> {
         title: Text("Role Description"),),
       body: ListView(
         children: [
-          LottieBuilder.asset('lottie/jobdescription.json',height: size.height*0.35,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Enter your preferences to proceed!!", style:GoogleFonts.sora(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize:16,
+            ),),
+          ),
+          LottieBuilder.asset('lottie/job.json',height: size.height*0.3,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextField(
@@ -29,7 +59,8 @@ class _RoleDescriptionState extends State<RoleDescription> {
                   color: Colors.black54,
                   fontSize:15,
                 ),
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(gapPadding: 0,borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(width: 1,)),
               ),
             ),
           ),
@@ -39,7 +70,7 @@ class _RoleDescriptionState extends State<RoleDescription> {
               keyboardType: TextInputType.text,
               // controller: emailController,
               decoration:  InputDecoration(
-                border: OutlineInputBorder(gapPadding: 0,
+                border: OutlineInputBorder(gapPadding: 0,borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(width: 1,)),
                 hintText: "Enter Job Requirements",
                 hintStyle:GoogleFonts.poppins(
@@ -49,6 +80,77 @@ class _RoleDescriptionState extends State<RoleDescription> {
               ),
             ),
           ),
+              Padding(
+              padding: const EdgeInsets.all(8.0),
+    child: Text("Select the level of questions❓", style:GoogleFonts.poppins(
+    color: textColor,
+    fontSize:15,
+    ),),
+    ),
+
+Row(children: [
+  GestureDetector(
+    onTap: (){
+      setState(() {
+        select=1;
+      });
+    },
+    child: Questionlevel(1, "Easy")
+  ),
+  GestureDetector(
+    onTap: (){
+      setState(() {
+        select=2;
+      });
+    },
+    child:  Questionlevel(2, "Medium")
+  ),
+  GestureDetector(onTap: (){
+    setState(() {
+      select=3;
+    });
+  },
+    child:  Questionlevel(3, "Hard")
+  )
+],),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 80.0,vertical: 20),
+            child: ElevatedButton(
+                onPressed: (){
+Navigator.push(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers()));
+                }, child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Proceed"),
+                SizedBox(width: size.width*0.02,),
+                Text("➜"),
+              ],
+            )),
+          )
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
+          //
+          //   child: Container(
+          //     height: 60,
+          //     width: 80,
+          //     decoration: BoxDecoration(border: Border.all(color: Colors.grey,),borderRadius: BorderRadius.circular(10)),
+          //     child: DropdownButton<String>(
+          //       value: _selectedLevel,
+          //       onChanged: (String? newValue) {
+          //         setState(() {
+          //           _selectedLevel = newValue!;
+          //         });
+          //       },
+          //       items: <String>['Easy', 'Medium', 'Difficult']
+          //           .map<DropdownMenuItem<String>>((String value) {
+          //         return DropdownMenuItem<String>(
+          //           value: value,
+          //           child: Text(value),
+          //         );
+          //       }).toList(),
+          //     ),
+          //   ),
+
         ],
       ),
     );
