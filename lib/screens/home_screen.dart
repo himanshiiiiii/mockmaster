@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mock_master/screens/jobdescription.dart';
 import 'package:mock_master/utils/colors.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -158,7 +159,6 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 20,
               ),),
           Row(
-            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "Mock",
@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50.0),
                   child: ElevatedButton(onPressed: (){
-
+Navigator.push(context, MaterialPageRoute(builder: (context)=>RoleDescription()));
                   }, child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
