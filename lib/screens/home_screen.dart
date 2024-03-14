@@ -306,10 +306,7 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      QuestionAnswerSlidingPanel(
-                                        title: "appTitle",
-                                        onSetting: onSettingCallback,
-                                      )));
+                                       RoleDescription()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
