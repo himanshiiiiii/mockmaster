@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mock_master/screens/questionspage.dart';
 import 'package:mock_master/utils/colors.dart';
 
 class RoleDescription extends StatefulWidget {
@@ -81,7 +82,7 @@ class _RoleDescriptionState extends State<RoleDescription> {
           ),
               Padding(
               padding: const EdgeInsets.all(8.0),
-    child: Text("Choose the level of question❓", style:GoogleFonts.poppins(
+    child: Text("Select the level of questions❓", style:GoogleFonts.poppins(
     color: textColor,
     fontSize:15,
     ),),
@@ -116,7 +117,7 @@ Row(children: [
             padding: const EdgeInsets.symmetric(horizontal: 80.0,vertical: 20),
             child: ElevatedButton(
                 onPressed: (){
-
+Navigator.push(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers()));
                 }, child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
