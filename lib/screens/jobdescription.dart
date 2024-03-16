@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -12,9 +14,19 @@ class RoleDescription extends StatefulWidget {
 }
 
 class _RoleDescriptionState extends State<RoleDescription> {
-  String _selectedLevel = 'Easy';
+  String _selectedLevel = 'none';
   int select=0;
+  TextEditingController jobdescriptioncontroller=TextEditingController();
+  TextEditingController  jobrequirementscontroller=TextEditingController();
+  TextEditingController  emailcontroller=TextEditingController();
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    jobdescriptioncontroller.dispose();
+    jobrequirementscontroller.dispose();
+    emailcontroller.dispose();
+  }
   Widget Questionlevel(int selected,String level,){
     var size=MediaQuery.of(context).size;
     return Padding(
@@ -33,6 +45,8 @@ class _RoleDescriptionState extends State<RoleDescription> {
         ),),
     );
   }
+
+
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
     return Scaffold(
@@ -48,11 +62,29 @@ class _RoleDescriptionState extends State<RoleDescription> {
               fontSize:16,
             ),),
           ),
-          LottieBuilder.asset('lottie/job.json',height: size.height*0.3,),
+          LottieBuilder.asset('lottie/job.json',height: size.height*0.25,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextField(
               keyboardType: TextInputType.name,
+              controller: emailcontroller,
+              decoration: InputDecoration(
+                hintText: "Email Address",
+                hintStyle:GoogleFonts.poppins(
+                  color: Colors.black54,
+                  //fontWeight: FontWeight.w600,
+                  fontSize:15,
+                ),
+                border: OutlineInputBorder(gapPadding: 0,borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(width: 1,)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
+            child: TextField(
+              keyboardType: TextInputType.name,
+              controller: jobdescriptioncontroller,
               decoration: InputDecoration(
                 hintText: "Enter Job description",
                 hintStyle:GoogleFonts.poppins(
@@ -64,11 +96,12 @@ class _RoleDescriptionState extends State<RoleDescription> {
               ),
             ),
           ),
+
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextFormField(
               keyboardType: TextInputType.text,
-              // controller: emailController,
+            controller: jobrequirementscontroller,
               decoration:  InputDecoration(
                 border: OutlineInputBorder(gapPadding: 0,borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(width: 1,)),
@@ -93,6 +126,7 @@ Row(children: [
     onTap: (){
       setState(() {
         select=1;
+        _selectedLevel="Easy";
       });
     },
     child: Questionlevel(1, "Easy")
@@ -101,6 +135,7 @@ Row(children: [
     onTap: (){
       setState(() {
         select=2;
+        _selectedLevel="Medium";
       });
     },
     child:  Questionlevel(2, "Medium")
@@ -108,6 +143,7 @@ Row(children: [
   GestureDetector(onTap: (){
     setState(() {
       select=3;
+      _selectedLevel="Hard";
     });
   },
     child:  Questionlevel(3, "Hard")
@@ -116,8 +152,11 @@ Row(children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 80.0,vertical: 20),
             child: ElevatedButton(
-                onPressed: (){
-Navigator.push(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers()));
+                onPressed: ()async{
+                  print(_selectedLevel);
+                 // await Future.delayed(Duration(seconds: 1),);
+Navigator.push(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers(jobdescription:jobdescriptioncontroller.text ,jobrequirements: jobrequirementscontroller.text,emailid: emailcontroller.text,level: _selectedLevel,)));
+_selectedLevel="";
                 }, child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -126,31 +165,7 @@ Navigator.push(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers()
                 Text("➜"),
               ],
             )),
-          )
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
-          //
-          //   child: Container(
-          //     height: 60,
-          //     width: 80,
-          //     decoration: BoxDecoration(border: Border.all(color: Colors.grey,),borderRadius: BorderRadius.circular(10)),
-          //     child: DropdownButton<String>(
-          //       value: _selectedLevel,
-          //       onChanged: (String? newValue) {
-          //         setState(() {
-          //           _selectedLevel = newValue!;
-          //         });
-          //       },
-          //       items: <String>['Easy', 'Medium', 'Difficult']
-          //           .map<DropdownMenuItem<String>>((String value) {
-          //         return DropdownMenuItem<String>(
-          //           value: value,
-          //           child: Text(value),
-          //         );
-          //       }).toList(),
-          //     ),
-          //   ),
-
+          ),
         ],
       ),
     );
