@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mock_master/apis/completeprofileapi.dart';
 import 'package:mock_master/screens/home_screen.dart';
 import 'package:mock_master/utils/colors.dart';
+import 'package:http/http.dart' as http;
 
 class CompleteProfile extends StatefulWidget {
   const CompleteProfile({Key? key}) : super(key: key);
@@ -11,6 +15,21 @@ class CompleteProfile extends StatefulWidget {
 }
 
 class _CompleteProfileState extends State<CompleteProfile> {
+  final String apiUrl = "https://mettl-hack.onrender.com/api/user";
+  TextEditingController namecontroller=TextEditingController();
+  TextEditingController  agecontroller=TextEditingController();
+  TextEditingController  numbercontroller=TextEditingController();
+  TextEditingController emailcontroller=TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    namecontroller.dispose();
+    agecontroller.dispose();
+    numbercontroller.dispose();
+    emailcontroller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;
@@ -42,6 +61,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
        child: TextField(
          keyboardType: TextInputType.name,
+         controller: namecontroller,
          decoration: InputDecoration(
              hintText: "Full Name",
              hintStyle:GoogleFonts.poppins(
@@ -56,7 +76,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextFormField(
               keyboardType: TextInputType.number,
-              // controller: emailController,
+              controller: agecontroller,
               decoration:  InputDecoration(
                 border: OutlineInputBorder(gapPadding: 0,
                     borderSide: BorderSide(width: 1,)),
@@ -71,6 +91,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextField(
+              controller: numbercontroller,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   hintText: "Number",
@@ -87,6 +108,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextField(
               keyboardType: TextInputType.name,
+              controller: emailcontroller,
               decoration: InputDecoration(
                   hintText: "Email Address",
                   hintStyle:GoogleFonts.poppins(
@@ -120,8 +142,14 @@ class _CompleteProfileState extends State<CompleteProfile> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 10),
             child: ElevatedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                onPressed: () async {
+                  // print(namecontroller.text);
+                  print("done");
+             //postData(namecontroller.text.toString(), int.parse(agecontroller.text), numbercontroller.text.toString(), emailcontroller.text.toString(), "abhi nii bhja hai");
+
+                  //await Future.delayed(Duration(seconds: 3),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+
             }, child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
