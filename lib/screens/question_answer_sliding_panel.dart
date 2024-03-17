@@ -12,13 +12,23 @@ import 'package:mock_master/utils/colors.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
+import '../apis/submitAnwerGeneratedBySpeechapi.dart';
+
 class BottomSheetModal extends StatefulWidget {
-  final String text;
+
+  final String question;
+  final String interviewId;
+  final String emailId;
+  final int index;
+  final String level;
 
 
   const BottomSheetModal({
     Key? key,
-    required this.text,
+     required this.question,
+    required this.interviewId,
+    required this.index,
+    required this.level, required this.emailId,
 
   }) : super(key: key);
 
@@ -122,7 +132,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
       isSpeaking = true;
     });
     // Call the speakText function to start speaking
-    await  speakText(widget.text);
+    await  speakText(widget.question);
     await Future.delayed(Duration(seconds: 4));
     setState(() {
       isSpeaking = false;
@@ -165,14 +175,6 @@ class _BottomSheetModalState extends State<BottomSheetModal>
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (_speechToText.isNotListening && _confidencelevel > 0)
-                Text(
-                  "Confidence: ${(_confidencelevel * 100).toStringAsFixed(1)}%",
-                  style: GoogleFonts.sora(
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
-                ),
               Container(
                 decoration: BoxDecoration(
                   color: updatedColor, // Set the background color to purple
@@ -206,7 +208,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                       ),
                     ),
                     Text(
-                      widget.text + "❓",
+                      widget.question + "❓",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.sora(
                         fontSize: 19,
@@ -219,23 +221,14 @@ class _BottomSheetModalState extends State<BottomSheetModal>
               SizedBox(
                 height: 4,
               ),
-              Divider(
-                color: Colors.grey,
-                thickness: 1.5,
-                height: 20,
-                endIndent: 5,
-              ),
-              SizedBox(
-                height: 4,
-              ),
               Container(
                 child: Center(
                   child: Text(
                     _speechToText.isListening
                         ? "Listening..."
-                        : _speechEnabled
-                            ? "Tap the Mic  "
-                            : "Please Give the Mic Permissions",
+                        : micIconShow
+                            ? "Tap the Mic"
+                            : " ",
                     style: GoogleFonts.sora(
                       fontSize: 18,
                       color: Colors.black,
@@ -269,21 +262,18 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),),
-                    SizedBox(
-                      height: 3,
-                    ),
+
                     Padding(
                       padding: const EdgeInsets.only(left:8.0,right:8,),
                       child: TextField(
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.w600),
                         controller: _textController,
-                        minLines: 9,
-                        maxLines: 9,
+                        minLines: 6,
+                        maxLines: 6,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Color(0xffcfa0ff),
-
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
                               borderSide: BorderSide(
@@ -301,7 +291,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 5,
                     ),
                   ],
                 ),
@@ -325,7 +315,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                   Column(
                     children: [
                       SizedBox(
-                        height: 106,
+                        height: 96,
                       ),
                       SizedBox(
                         height: 65,
@@ -351,14 +341,31 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                   ):Column(
                     children: [
                       SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Add your submit button logic here
+                              Navigator.of(context).pop();
+                              setState(() {
+                              });
+                              FutureBuilder(
+                                future: SubmitAnswer(_textController.toString(),widget.question,widget.interviewId,widget.emailId,widget.index,widget.level), // Call your Future function here
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator(); // Show loading indicator
+                                  } else {
+                                    if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}'); // Show error message if future fails
+                                    } else {
+                                      // Show success message or other content based on the future result
+                                      return  Text("SuccessFill 1234");
+                                    }
+                                  }
+                                },
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white, // Set white background color
@@ -375,7 +382,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // Add your cancel button logic here
+                              Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white, // Set white background color
@@ -396,32 +403,6 @@ class _BottomSheetModalState extends State<BottomSheetModal>
                     ],
                   )
                 ),
-              // if (!isSpeaking)
-              //   Center(
-              //     child: FloatingActionButton(
-              //         onPressed: () {
-              //           _speechToText.isListening
-              //               ? _startListening
-              //               : stopListening;
-              //         },
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(
-              //               25), // Adjust the radius as needed
-              //         ),
-              //         child: _speechToText.isListening
-              //             ? const Icon(Icons.mic,
-              //                 color: Colors.purple, size: 48)
-              //             : const Icon(Icons.mic,
-              //                 color: updatedColor, size: 48)),
-              //   ),
-              // if (isSpeaking)
-              //   Center(
-              //     child: LottieBuilder.asset(
-              //       'lottie/mic-lottie.json',
-              //       width: size.width * 0.5,
-              //       height: size.height * 0.5,
-              //     ),
-              //   ),
               SizedBox(height: 16),
             ],
           ),
