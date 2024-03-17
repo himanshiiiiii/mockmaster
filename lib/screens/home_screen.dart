@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mock_master/apis/pastinterviewsapi.dart';
@@ -6,6 +7,9 @@ import 'package:mock_master/screens/profile.dart';
 import 'package:mock_master/screens/question_answer_sliding_panel.dart';
 import 'package:mock_master/utils/colors.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class HomePage extends StatefulWidget {
 final String email;
@@ -89,18 +93,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget PastInterviews(String role, date, time, double score) {
+  Widget PastInterviews(String role, date, time,String requirements, double score) {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       child: Container(
-        height: size.height * 0.17,
+        height: size.height * 0.2,
         decoration: BoxDecoration(
             color: buttonColor, borderRadius: BorderRadius.circular(15)),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -153,6 +157,21 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                ),
+                child: Text(
+                  requirements,
+                  style: GoogleFonts.sora(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
@@ -182,6 +201,28 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<Map<String, dynamic>?> fetchStats(String email) async {
+    try {
+      final Dio dio = Dio();
+      final response = await dio.post(
+        'https://mettl-hack.onrender.com/api/stats',
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        print('Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return null;
+    }
+  }
+
 
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -386,7 +427,7 @@ class _HomePageState extends State<HomePage> {
                       // Parse the API response into a DateTime object
                       DateTime apiDateTime = DateTime.parse(
                           snapshot.data?["interviews"][index]["Date"]);
-                      // apiDateTime=apiDateTime.add(Duration(hours:05,minutes: 30));
+                       apiDateTime=apiDateTime.add(Duration(hours:05,minutes: 30));
 
                       // Format the time portion with milliseconds and timezone offset
                       String formattedTime = DateFormat("hh:mm a").format(
@@ -397,8 +438,8 @@ class _HomePageState extends State<HomePage> {
                       return Column(
                         children: [
                           PastInterviews(
-                              "Software Developer Engineer", apiDateTime
-                              .toString().substring(0, 10), formattedTime,
+                              snapshot.data?["interviews"][index]["Job_Description"], apiDateTime
+                              .toString().substring(0, 10), formattedTime,snapshot.data?["interviews"][index]["Job_Requirments"],
                               snapshot.data?["interviews"][index]["TotalScore"]
                                   .toDouble()
                           )
