@@ -4,6 +4,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mock_master/utils/colors.dart';
@@ -12,14 +13,12 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 class BottomSheetModal extends StatefulWidget {
   final String text;
-  final Function stopspeaking;
-  final Function startspeaking;
+
 
   const BottomSheetModal({
     Key? key,
     required this.text,
-    required this.stopspeaking,
-    required this.startspeaking,
+
   }) : super(key: key);
 
   @override
@@ -35,6 +34,22 @@ class _BottomSheetModalState extends State<BottomSheetModal>
   Timer? _timer;
   int _timeLeftInSeconds = 180;
   final SpeechToText _speechToText = SpeechToText();
+  int? _currentWordStart, _currentWordEnd;
+  FlutterTts flutterTts = FlutterTts();
+
+  Future<void> speakText(String text) async {
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.setVolume(1.0);
+    await flutterTts.speak(text);
+    // await flutterTts.pause();
+  }
+
+  Future<void> stopspeaking() async {
+    FlutterTts flutterTts = FlutterTts();
+    await flutterTts.stop();
+  }
+
 
   void initSpeech() async {
     _speechEnabled = await _speechToText.initialize();
@@ -106,7 +121,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
       isSpeaking = true;
     });
     // Call the speakText function to start speaking
-    await widget.startspeaking(widget.text);
+    await  speakText(widget.text);
     await Future.delayed(Duration(seconds: 4));
     setState(() {
       isSpeaking = false;
@@ -116,7 +131,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
   }
 
   void stopSpeaking() {
-    widget.stopspeaking();
+     stopspeaking();
   }
 
   void stopListening() {
@@ -437,7 +452,7 @@ class _BottomSheetModalState extends State<BottomSheetModal>
             onPressed: () {
               Navigator.of(context).pop();
               _timer?.cancel();
-              widget.stopspeaking();
+               stopspeaking();
             },
             child: const Icon(Icons.close, color: Colors.white, size: 28),
           ),

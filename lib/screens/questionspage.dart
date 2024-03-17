@@ -16,21 +16,6 @@ class QuestionsAnswers extends StatefulWidget {
 
 class _QuestionsAnswersState extends State<QuestionsAnswers> {
   String givtext = "I trust this message finds you in good spirits ";
-  int? _currentWordStart, _currentWordEnd;
-  FlutterTts flutterTts = FlutterTts();
-
-  Future<void> speakText(String text) async {
-    await flutterTts.setLanguage('en-US');
-    await flutterTts.setSpeechRate(0.5);
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(text);
-    // await flutterTts.pause();
-  }
-
-  Future<void> stopspeaking() async {
-    FlutterTts flutterTts = FlutterTts();
-    await flutterTts.stop();
-  }
 
   @override
   void initState() {
@@ -204,8 +189,6 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
       builder: (BuildContext context) {
         return BottomSheetModal(
           text: givtext,
-          stopspeaking: stopspeaking,
-          startspeaking: speakText,
         );
       },
     );
