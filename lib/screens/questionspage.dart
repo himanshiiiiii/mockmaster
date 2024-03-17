@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mock_master/apis/jobdescriptionapi.dart';
+import 'package:mock_master/screens/question_answer_sliding_panel.dart';
 import 'package:mock_master/utils/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -9,7 +10,13 @@ class QuestionsAnswers extends StatefulWidget {
   final String jobrequirements;
   final String level;
   final String emailid;
-  QuestionsAnswers({Key? key,required this.jobdescription,required this.jobrequirements,required this.emailid,required this.level}) : super(key: key);
+  QuestionsAnswers(
+      {Key? key,
+      required this.jobdescription,
+      required this.jobrequirements,
+      required this.emailid,
+      required this.level})
+      : super(key: key);
 
   @override
   State<QuestionsAnswers> createState() => _QuestionsAnswersState();
@@ -18,6 +25,7 @@ class QuestionsAnswers extends StatefulWidget {
 class _QuestionsAnswersState extends State<QuestionsAnswers> {
  late Future<Map<String,dynamic>?> _future;
   @override
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -31,7 +39,8 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.grey),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(15)),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -39,10 +48,12 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-            decoration: BoxDecoration(color: buttonColor,borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(
+                    color: buttonColor,
+                    borderRadius: BorderRadius.circular(10)),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                   child: Text(domain),
                 ),),
               SizedBox(height: size.height * 0.01,),
@@ -62,10 +73,16 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  IconButton(onPressed: () {
+                 IconButton(
+                      onPressed: () {
+                        _showBottomSheet(context,question,interviewId,email,index,level);
 
-                  },
-                      icon: Icon(Icons.mic, size: 23, color: textColor,)),
+                      },
+                      icon: Icon(
+                        Icons.mic,
+                        size: 23,
+                        color: textColor,
+                      )),
 
                   Row(
                     children: [
@@ -83,24 +100,36 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                     ],)
                     ],
                   ),
-
             ],
           ),
         ),
       ),
     );
   }
-
-
+  void _showBottomSheet(BuildContext context,String question,String interviewId,String emailId,int index, String level) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheetModal(
+           question: question,
+          interviewId: interviewId,
+          emailId: emailId,
+          index: index,
+          level: level,
+        );
+      },
+    );
+  }
   Widget build(BuildContext context) {
-    var size=MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         elevation: 3,
         backgroundColor: Colors.white,
         centerTitle: true,
         automaticallyImplyLeading: true,
-        title:Column(
+        title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -109,18 +138,18 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
               children: [
                 Text(
                   "Mock",
-                  style:GoogleFonts.poppins(
+                  style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
                     fontSize: 21,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:6.0),
+                  padding: const EdgeInsets.only(top: 6.0),
                   child: Text(
                     "Master",
                     // textAlign: TextAlign.center,
-                    style:GoogleFonts.poppins(
+                    style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w700,
                       color: buttonColor,
                       fontSize: 21,
@@ -159,7 +188,11 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                );
              });
        }
-       return Text("Some error ocurred");
+    return Center(child: Text("Fields Are Empty", style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w700,
+              color: buttonColor,
+              fontSize: 21,
+            ),));
      }
     ),
     );

@@ -42,9 +42,15 @@ dependencies:
   google_sign_in: ^6.1.6
   firebase_auth: ^4.17.8
   font_awesome_flutter: ^10.7.0
+
+  flutter_sliding_up_panel: ^2.1.1
+  flutter_tts: ^3.8.5
+  speech_to_text: ^6.6.0
+  avatar_glow: ^3.0.1
   http: ^1.1.2
   dio: ^4.0.0
   intl: ^0.17.0
+
 
 
 
