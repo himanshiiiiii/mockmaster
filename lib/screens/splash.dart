@@ -1,6 +1,7 @@
 import'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mock_master/screens/completeprofile.dart';
 import 'package:mock_master/screens/signup.dart';
 import 'package:mock_master/utils/colors.dart';
 class SplashScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigatetoHome() async{
    await Future.delayed(Duration(seconds:3),(){});
     Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => Register()));
+        MaterialPageRoute(builder: (context) => CompleteProfile()));
   }
   Widget build(BuildContext context) {
     var size=MediaQuery.of(context).size;

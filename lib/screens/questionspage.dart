@@ -23,9 +23,19 @@ class QuestionsAnswers extends StatefulWidget {
 }
 
 class _QuestionsAnswersState extends State<QuestionsAnswers> {
+ late Future<Map<String,dynamic>?> _future;
   @override
-  Widget QuestionAnswers(String question, String answer, String domain,int index, String interviewId,String email,String level) {
-    var size = MediaQuery.of(context).size;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _future=sendQuestionData(widget.jobdescription,widget.jobrequirements,widget.level,widget.emailid);
+  }
+  @override
+  Widget QuestionAnswers(String question,String answer,String domain,int index,String interviewId,String email,String level,int score) {
+    var size = MediaQuery
+        .of(context)
+        .size;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
@@ -45,37 +55,25 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                   child: Text(domain),
-                ),
-              ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              Text(
-                question,
-                style: GoogleFonts.sora(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                ),
-              ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              Text(
-                answer,
-                style: GoogleFonts.sora(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                ),
-              ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
+                ),),
+              SizedBox(height: size.height * 0.01,),
+              Text(question, style: GoogleFonts.sora(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),),
+              SizedBox(height: size.height * 0.02,),
+              Text(answer, style: GoogleFonts.sora(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),),
+
+              SizedBox(height: size.height * 0.02,),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  IconButton(
+                 IconButton(
                       onPressed: () {
                         _showBottomSheet(context,question,interviewId,email,index,level);
 
@@ -85,45 +83,23 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                         size: 23,
                         color: textColor,
                       )),
-                  SizedBox(
-                    width: size.width * 0.03,
+
+                  Row(
+                    children: [
+                      Text("Score:", style: GoogleFonts.sora(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),),
+                      SizedBox(width: size.width * 0.01,),
+                      Text(score.toString(), style: GoogleFonts.sora(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),)
+                    ],)
+                    ],
                   ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: FaIcon(
-                        FontAwesomeIcons.robot,
-                        size: 20,
-                      )),
-                  SizedBox(
-                    width: size.width * 0.03,
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: FaIcon(
-                        FontAwesomeIcons.history,
-                        size: 20,
-                      )),
-                  SizedBox(
-                    width: size.width * 0.03,
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.reviews_rounded,
-                        size: 20,
-                      )),
-                  SizedBox(
-                    width: size.width * 0.03,
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.favorite_border_outlined,
-                        size: 21,
-                        color: Colors.red,
-                      )),
-                ],
-              )
             ],
           ),
         ),
@@ -184,42 +160,41 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
             ),
           ],
         ),
-      ),
-      body: FutureBuilder<Map<String, dynamic>?>(
-          future: sendQuestionData(widget.jobdescription,
-              widget.jobrequirements, widget.level, widget.emailid, ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
-              print(widget.jobdescription);
-              print(widget.level);
-              return ListView.builder(
-                  itemCount: snapshot.data?["questions"].length,
-                  scrollDirection: Axis.vertical,
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    print(snapshot.data);
-                    print(snapshot.data?["questions"][0]["Question"]);
-                    return Column(
-                      children: [
-                        QuestionAnswers(
-                            snapshot.data?["questions"][index]["Question"],
-                            snapshot.data?["questions"][index]["Answer"],
-                            snapshot.data?["questions"][index]["Type"],index,
-                            snapshot.data?["interview_id"],widget.emailid,widget.level,
-                        )
-                      ],
-                    );
-                  });
-            }
-            return Center(child: Text("Fields Are Empty", style: GoogleFonts.poppins(
+    ),
+     body: FutureBuilder<Map<String,dynamic>?>(future: _future,
+         builder: (context,snapshot) {
+       if (snapshot.connectionState == ConnectionState.waiting) { 
+         return const Center(child: CircularProgressIndicator());
+       }
+       else if (snapshot.hasData) {
+         print(widget.jobdescription);
+         print(widget.level);
+         return ListView.builder(
+             itemCount: snapshot.data?["questions"].length,
+             scrollDirection: Axis.vertical,
+             physics: ScrollPhysics(),
+             shrinkWrap: true,
+             itemBuilder: (context, index) {
+               print(snapshot.data);
+               print(snapshot.data?["questions"][0]["Question"]);
+               return Column(
+                 children: [
+                   QuestionAnswers(
+                       snapshot.data?["questions"][index]["Question"],
+                       snapshot.data?["questions"][index]["Answer"],
+                       snapshot.data?["questions"][index]["Type"],
+                       index,snapshot.data?["interview_id"],widget.emailid,widget.level,snapshot.data?["questions"][index]["Score"])
+                 ],
+               );
+             });
+       }
+    return Center(child: Text("Fields Are Empty", style: GoogleFonts.poppins(
               fontWeight: FontWeight.w700,
               color: buttonColor,
               fontSize: 21,
             ),));
-          }),
+     }
+    ),
     );
   }
 }

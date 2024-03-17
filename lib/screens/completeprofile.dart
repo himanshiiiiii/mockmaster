@@ -8,7 +8,7 @@ import 'package:mock_master/utils/colors.dart';
 import 'package:http/http.dart' as http;
 
 class CompleteProfile extends StatefulWidget {
- CompleteProfile({Key? key}) : super(key: key);
+ const CompleteProfile({Key? key}) : super(key: key);
 
   @override
   State<CompleteProfile> createState() => _CompleteProfileState();
@@ -120,25 +120,25 @@ class _CompleteProfileState extends State<CompleteProfile> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
-            child: Container(
-              height: size.height*0.17,
-              decoration: BoxDecoration(border: Border.all(color: Colors.grey),
-                  color: Colors.white,),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: size.height*0.02,),
-                  IconButton(icon:Icon(Icons.cloud_upload_rounded), onPressed: () {  },),
-                  Text("Upload your resume", style:GoogleFonts.poppins(
-                    color: Colors.black54,
-                    fontSize:15,
-                  ),),
-                  ]
-              ),),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
+          //   child: Container(
+          //     height: size.height*0.17,
+          //     decoration: BoxDecoration(border: Border.all(color: Colors.grey),
+          //         color: Colors.white,),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.start,
+          //       crossAxisAlignment: CrossAxisAlignment.center,
+          //       children: [
+          //         SizedBox(height: size.height*0.02,),
+          //         IconButton(icon:Icon(Icons.cloud_upload_rounded), onPressed: () {  },),
+          //         Text("Upload your resume", style:GoogleFonts.poppins(
+          //           color: Colors.black54,
+          //           fontSize:15,
+          //         ),),
+          //         ]
+          //     ),),
+          // ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 10),
             child: ElevatedButton(
@@ -146,7 +146,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
              postData(namecontroller.text.toString(), int.parse(agecontroller.text), numbercontroller.text.toString(), emailcontroller.text.toString(), "abhi nii bhja hai");
 
                   await Future.delayed(Duration(seconds: 3),);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(email:emailcontroller.text.toString(),name: namecontroller.text,number: numbercontroller.text,)));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(email:emailcontroller.text.toString(),name: namecontroller.text,number: numbercontroller.text,)));
 
             }, child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
