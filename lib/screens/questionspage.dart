@@ -16,8 +16,15 @@ class QuestionsAnswers extends StatefulWidget {
 }
 
 class _QuestionsAnswersState extends State<QuestionsAnswers> {
+ late Future<Map<String,dynamic>?> _future;
   @override
-  Widget QuestionAnswers(String question,String answer,String domain) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _future=sendQuestionData(widget.jobdescription,widget.jobrequirements,widget.level,widget.emailid);
+  }
+  @override
+  Widget QuestionAnswers(String question,String answer,String domain,int index,String interviewId,String email,String level,int score) {
     var size = MediaQuery
         .of(context)
         .size;
@@ -44,32 +51,39 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                 fontWeight: FontWeight.w500,
                 fontSize: 15,
               ),),
-              SizedBox(height: size.height * 0.01,),
+              SizedBox(height: size.height * 0.02,),
               Text(answer, style: GoogleFonts.sora(
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
                 fontSize: 15,
               ),),
 
-              SizedBox(height: size.height * 0.04,),
-              Row(crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(height: size.height * 0.02,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  IconButton(onPressed: () {},
+                  IconButton(onPressed: () {
+
+                  },
                       icon: Icon(Icons.mic, size: 23, color: textColor,)),
-                  SizedBox(width: size.width * 0.03,),
-                  IconButton(onPressed: () {},
-                      icon: FaIcon(FontAwesomeIcons.robot, size: 20,)),
-                  SizedBox(width: size.width * 0.03,),
-                  IconButton(onPressed: () {},
-                      icon: FaIcon(FontAwesomeIcons.history, size: 20,)),
-                  SizedBox(width: size.width * 0.03,),
-                  IconButton(onPressed: () {},
-                      icon: Icon(Icons.reviews_rounded, size: 20,)),
-                  SizedBox(width: size.width * 0.03,),
-                  IconButton(onPressed: () {},
-                      icon: Icon(Icons.favorite_border_outlined, size: 21,
-                        color: Colors.red,)),
-                ],)
+
+                  Row(
+                    children: [
+                      Text("Score:", style: GoogleFonts.sora(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),),
+                      SizedBox(width: size.width * 0.01,),
+                      Text(score.toString(), style: GoogleFonts.sora(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),)
+                    ],)
+                    ],
+                  ),
+
             ],
           ),
         ),
@@ -118,8 +132,8 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
           ],
         ),
     ),
-     body: FutureBuilder<Map<String,dynamic>?>(future: sendQuestionData(widget.jobdescription,widget.jobrequirements,widget.level,widget.emailid),  builder: (context,snapshot) {
-
+     body: FutureBuilder<Map<String,dynamic>?>(future: _future,
+         builder: (context,snapshot) {
        if (snapshot.connectionState == ConnectionState.waiting) { 
          return const Center(child: CircularProgressIndicator());
        }
@@ -136,15 +150,18 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                print(snapshot.data?["questions"][0]["Question"]);
                return Column(
                  children: [
-                   QuestionAnswers(snapshot.data?["questions"][index]["Question"],snapshot.data?["questions"][index]["Answer"],snapshot.data?["questions"][index]["Type"])
+                   QuestionAnswers(
+                       snapshot.data?["questions"][index]["Question"],
+                       snapshot.data?["questions"][index]["Answer"],
+                       snapshot.data?["questions"][index]["Type"],
+                       index,snapshot.data?["interview_id"],widget.emailid,widget.level,snapshot.data?["questions"][index]["Score"])
                  ],
                );
              });
        }
-       return Text("Loading");
+       return Text("Some error ocurred");
      }
     ),
-
     );
   }
 }

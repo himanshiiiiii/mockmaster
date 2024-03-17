@@ -22,6 +22,13 @@ final String number;
 }
 
 class _HomePageState extends State<HomePage> {
+  late  Future<Map<String, dynamic>?> _future1;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   // _future1=fetchStats(widget.email);
+  }
   @override
 
   Widget CategoryBoxes(String text1, String text2, String emoji, int count) {
@@ -148,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                   horizontal: 15.0,
                 ),
                 child: Text(
-                  role,
+                  role, overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.sora(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -164,6 +171,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Text(
                   requirements,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.sora(
                     color: Colors.black,
                     fontWeight: FontWeight.w400,
@@ -368,18 +376,36 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Row(
-            children: [
-              CategoryBoxes("Mock", "Interviews", "🧑🏻‍💻", 0),
-              CategoryBoxes("Badges", "Collected", "🎖️", 0),
-            ],
+
+          FutureBuilder<Map<String,dynamic>?>(future:fetchStats(widget.email),
+              builder: (context,snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                else if (snapshot.hasData) {
+                        print(snapshot.data);
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                CategoryBoxes("Mock", "Interviews", "🧑🏻‍💻", snapshot.data?["total_interviews"]),
+                                CategoryBoxes("Badges", "Collected", "🎖️", snapshot.data?["total_badges"]),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                CategoryBoxes("Questions", "Answered", "❓", snapshot.data?["questions_answered"]),
+                                CategoryBoxes("Answers", "Available", "📝",snapshot.data?["available_answered_questions_pair"].length),
+                              ],
+                            ),
+                          ],
+                        );
+                }
+                return Text("Loading");
+              }
           ),
-          Row(
-            children: [
-              CategoryBoxes("Questions", "Answered", "❓", 0),
-              CategoryBoxes("Answers", "Available", "📝", 0),
-            ],
-          ),
+
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: Text(
@@ -427,7 +453,7 @@ class _HomePageState extends State<HomePage> {
                       // Parse the API response into a DateTime object
                       DateTime apiDateTime = DateTime.parse(
                           snapshot.data?["interviews"][index]["Date"]);
-                       apiDateTime=apiDateTime.add(Duration(hours:05,minutes: 30));
+                       //apiDateTime=apiDateTime.add(Duration(hours:05,minutes: 30));
 
                       // Format the time portion with milliseconds and timezone offset
                       String formattedTime = DateFormat("hh:mm a").format(
@@ -440,8 +466,8 @@ class _HomePageState extends State<HomePage> {
                           PastInterviews(
                               snapshot.data?["interviews"][index]["Job_Description"], apiDateTime
                               .toString().substring(0, 10), formattedTime,snapshot.data?["interviews"][index]["Job_Requirments"],
-                              snapshot.data?["interviews"][index]["TotalScore"]
-                                  .toDouble()
+                          snapshot.data?["interviews"][index]["TotalScore"].toDouble()
+
                           )
                         ],
                       );

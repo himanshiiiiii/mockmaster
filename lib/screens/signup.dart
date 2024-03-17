@@ -114,7 +114,7 @@ class _RegisterState extends State<Register> {
                   child: InkWell(
 
                     onTap: (){
-
+Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
                       // if (_formKey.currentState!.validate()) {
                       //   setState(() {
                       //     loading = true;

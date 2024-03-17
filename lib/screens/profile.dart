@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mock_master/apis/fetchbadgeapi.dart';
@@ -74,29 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             return Column(
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 20.0),
-                //   child: Row(
-                //     children: [
-                //       Text(
-                //         "Current Score:",
-                //         style: GoogleFonts.poppins(
-                //           color: Colors.blueGrey,
-                //           fontWeight: FontWeight.w600,
-                //           fontSize: 13,
-                //         ),
-                //       ),
-                //       SizedBox(width: 5,),
-                //       Text(
-                //         snapshot.data?["badge_score"]?.toString() ?? '',
-                //         style: GoogleFonts.poppins(
-                //           color: Colors.blueGrey,
-                //
-                //           fontSize: 13,
-                //         ),),
-                //     ],
-                //   ),
-                // ),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
                   child: Container(
@@ -137,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   SizedBox(width: 5,),
                                   Text(
-                                    snapshot.data?["badge_score"]?.toString() ?? '',
+                                    (snapshot.data?["badge_score"].toStringAsFixed(2)).toString() ,
                                     style: GoogleFonts.poppins(
                                       color: Colors.blueGrey,
 fontWeight: FontWeight.w600,
@@ -148,7 +128,7 @@ fontWeight: FontWeight.w600,
                             ),
                           ],
                         ),
-                        CustomLinearProgressIndicator(value:snapshot.data?["badge_score"].toDouble(),maxValue: 10,)
+                        CustomLinearProgressIndicator(value:(snapshot.data?["badge_score"]* pow(10, 2)).round() / pow(10, 2),maxValue: 10,)
                       ],
                     ),
                   ),

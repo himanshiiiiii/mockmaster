@@ -18,7 +18,7 @@ class CustomLinearProgressIndicator extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                '${(value * 100 / maxValue).toInt()}%',
+                '${(value * 100/maxValue).toDouble()}%',
                 style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500),
               ),
               Text("/",style: TextStyle(fontSize: 14),),
