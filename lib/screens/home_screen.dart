@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mock_master/apis/pastinterviewsapi.dart';
 import 'package:mock_master/screens/jobdescription.dart';
+import 'package:mock_master/screens/profile.dart';
 import 'package:mock_master/screens/question_answer_sliding_panel.dart';
 import 'package:mock_master/utils/colors.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+final String email;
+final String name;
+final String number;
+ HomePage({Key? key,required this.email,required this.name,required this.number}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  bool showPerformance = false;
-  onSettingCallback() {
-    setState(() {
-      showPerformance = !showPerformance;
-    });
-  }
-
   @override
+
   Widget CategoryBoxes(String text1, String text2, String emoji, int count) {
     var size = MediaQuery.of(context).size;
     return Padding(
@@ -236,11 +236,16 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: CircleAvatar(
-                radius: 30,
-                backgroundImage: AssetImage("assets/user.png"),
+            GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage(email: widget.email,number: widget.number,name: widget.name,)));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage("assets/user.png"),
+                ),
               ),
             )
           ],
@@ -266,7 +271,6 @@ class _HomePageState extends State<HomePage> {
                         "❓",
                         style: GoogleFonts.poppins(
                           color: Colors.white,
-                          // fontWeight: FontWeight.w700,
                           fontSize: 18,
                         ),
                       ),
@@ -306,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                       RoleDescription()));
+                                       RoleDescription(email: widget.email,)));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -346,8 +350,64 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          PastInterviews(
-              "Software Developer Engineer", "Mar 9,2024", "11:13pm", 5.9
+
+          FutureBuilder<Map<String,dynamic>?>(future: fetchInterviews(widget.email),  builder: (context,snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            else if (snapshot.hasData) {
+              if (snapshot.data?.length == 0||snapshot.data?["interviews"].length==0) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 6),
+                    child: Column(
+                      children: [
+                        // const SizedBox(height: 10,),
+                        Text(
+                          "You have no interviews at this moment!",
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              else {
+                return ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    physics: ScrollPhysics(),
+                    itemCount: snapshot.data?["interviews"].length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      // Parse the API response into a DateTime object
+                      DateTime apiDateTime = DateTime.parse(
+                          snapshot.data?["interviews"][index]["Date"]);
+                      // apiDateTime=apiDateTime.add(Duration(hours:05,minutes: 30));
+
+                      // Format the time portion with milliseconds and timezone offset
+                      String formattedTime = DateFormat("hh:mm a").format(
+                          apiDateTime);
+                      print(apiDateTime);
+                      print(snapshot.data);
+                      //print(snapshot.data?["questions"][0]["Question"]);
+                      return Column(
+                        children: [
+                          PastInterviews(
+                              "Software Developer Engineer", apiDateTime
+                              .toString().substring(0, 10), formattedTime,
+                              snapshot.data?["interviews"][index]["TotalScore"]
+                                  .toDouble()
+                          )
+                        ],
+                      );
+                    });
+              }}
+            return Center(child: const CircularProgressIndicator());
+          }
           ),
           SizedBox(
             height: 10,

@@ -7,14 +7,15 @@ import 'package:mock_master/screens/questionspage.dart';
 import 'package:mock_master/utils/colors.dart';
 
 class RoleDescription extends StatefulWidget {
-  const RoleDescription({Key? key}) : super(key: key);
+ final String email;
+  const RoleDescription({Key? key,required this.email}) : super(key: key);
 
   @override
   State<RoleDescription> createState() => _RoleDescriptionState();
 }
 
 class _RoleDescriptionState extends State<RoleDescription> {
-  String _selectedLevel = 'none';
+  late String _selectedLevel = "none";
   int select=0;
   TextEditingController jobdescriptioncontroller=TextEditingController();
   TextEditingController  jobrequirementscontroller=TextEditingController();
@@ -25,7 +26,7 @@ class _RoleDescriptionState extends State<RoleDescription> {
     super.dispose();
     jobdescriptioncontroller.dispose();
     jobrequirementscontroller.dispose();
-    emailcontroller.dispose();
+    // emailcontroller.dispose();
   }
   Widget Questionlevel(int selected,String level,){
     var size=MediaQuery.of(context).size;
@@ -62,24 +63,7 @@ class _RoleDescriptionState extends State<RoleDescription> {
               fontSize:16,
             ),),
           ),
-          LottieBuilder.asset('lottie/job.json',height: size.height*0.25,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
-            child: TextField(
-              keyboardType: TextInputType.name,
-              controller: emailcontroller,
-              decoration: InputDecoration(
-                hintText: "Email Address",
-                hintStyle:GoogleFonts.poppins(
-                  color: Colors.black54,
-                  //fontWeight: FontWeight.w600,
-                  fontSize:15,
-                ),
-                border: OutlineInputBorder(gapPadding: 0,borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(width: 1,)),
-              ),
-            ),
-          ),
+          LottieBuilder.asset('lottie/job.json',height: size.height*0.28,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
             child: TextField(
@@ -154,9 +138,14 @@ Row(children: [
             child: ElevatedButton(
                 onPressed: ()async{
                   print(_selectedLevel);
-                 // await Future.delayed(Duration(seconds: 1),);
-Navigator.push(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers(jobdescription:jobdescriptioncontroller.text ,jobrequirements: jobrequirementscontroller.text,emailid: emailcontroller.text,level: _selectedLevel,)));
-_selectedLevel="";
+                  print(jobdescriptioncontroller.text);
+                  print(jobrequirementscontroller.text);
+
+                 // await Future.delayed(Duration(seconds: 1),(){
+                 //
+                 // });
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>QuestionsAnswers(jobdescription:jobdescriptioncontroller.text,jobrequirements: jobrequirementscontroller.text,emailid: widget.email,level: _selectedLevel.toString(),)));
+
                 }, child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

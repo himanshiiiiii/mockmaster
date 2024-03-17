@@ -8,7 +8,7 @@ import 'package:mock_master/utils/colors.dart';
 import 'package:http/http.dart' as http;
 
 class CompleteProfile extends StatefulWidget {
-  const CompleteProfile({Key? key}) : super(key: key);
+ CompleteProfile({Key? key}) : super(key: key);
 
   @override
   State<CompleteProfile> createState() => _CompleteProfileState();
@@ -143,12 +143,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
             padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 10),
             child: ElevatedButton(
                 onPressed: () async {
-                  // print(namecontroller.text);
-                  print("done");
-             //postData(namecontroller.text.toString(), int.parse(agecontroller.text), numbercontroller.text.toString(), emailcontroller.text.toString(), "abhi nii bhja hai");
+             postData(namecontroller.text.toString(), int.parse(agecontroller.text), numbercontroller.text.toString(), emailcontroller.text.toString(), "abhi nii bhja hai");
 
-                  //await Future.delayed(Duration(seconds: 3),);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                  await Future.delayed(Duration(seconds: 3),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(email:emailcontroller.text.toString(),name: namecontroller.text,number: numbercontroller.text,)));
 
             }, child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
