@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             Padding(
               padding: const EdgeInsets.only(left: 220.0, top: 10),
-              child: Text("Forgot Password ?",
+              child: Text("Forgot Password !",
                   style: GoogleFonts.aBeeZee(color: textColor, fontSize: 14)),
             ),
             Padding(

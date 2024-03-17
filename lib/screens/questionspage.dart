@@ -2,13 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:mock_master/screens/question_answer_sliding_panel.dart';
 import 'package:mock_master/screens/sample.dart';
+
+import 'package:mock_master/apis/jobdescriptionapi.dart';
+
 import 'package:mock_master/utils/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class QuestionsAnswers extends StatefulWidget {
-  const QuestionsAnswers({Key? key}) : super(key: key);
+  final String jobdescription;
+  final String jobrequirements;
+  final String level;
+  final String emailid;
+  QuestionsAnswers(
+      {Key? key,
+      required this.jobdescription,
+      required this.jobrequirements,
+      required this.emailid,
+      required this.level})
+      : super(key: key);
 
   @override
   State<QuestionsAnswers> createState() => _QuestionsAnswersState();
@@ -30,7 +44,8 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
 
 
   @override
-  Widget QuestionAnswers(String question) {
+
+  Widget QuestionAnswers(String question, String answer, String domain,int index, String interviewId,String email,String level) {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -41,9 +56,36 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+              Container(
+                decoration: BoxDecoration(
+                    color: buttonColor,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+                  child: Text(domain),
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
               Text(
                 question,
+                style: GoogleFonts.sora(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                ),
+              ),
+              SizedBox(
+
+                height: size.height * 0.01,
+              ),
+              Text(
+                answer,
                 style: GoogleFonts.sora(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
@@ -60,6 +102,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                       onPressed: () {
 
                         _showBottomSheet(context);
+
                       },
                       icon: Icon(
                         Icons.mic,
@@ -70,10 +113,10 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                     width: size.width * 0.03,
                   ),
                   IconButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SpeechToTextPage()));
-                      },
+
+                 
+                      onPressed: () {},
+
                       icon: FaIcon(
                         FontAwesomeIcons.robot,
                         size: 20,
@@ -115,73 +158,8 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
     );
   }
 
-  // void _showBottomSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     isScrollControlled: true,
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //
-  //       speakText(givtext);
-  //       return Scaffold(
-  //         body: Container(
-  //           padding: EdgeInsets.only(top: 46, left: 20, right: 20),
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               RichText(
-  //                   textAlign: TextAlign.center,
-  //                   text: TextSpan(
-  //                     style: GoogleFonts.sora(
-  //                       fontSize: 24,
-  //                       color: Colors.black,
-  //                     ),
-  //                     children: [
-  //                   TextSpan(text: givtext),
-  //                       ]
-  //                       // TextSpan(text: givtext.substring(0, _currentWordStart)),
-  //                     //   if (_currentWordStart != null && _currentWordEnd != null)
-  //                     //     TextSpan(
-  //                     //       text: givtext.substring(_currentWordStart!, _currentWordEnd!),
-  //                     //       style: GoogleFonts.sora(
-  //                     //         fontSize: 24,
-  //                     //         color: Colors.white,
-  //                     //         backgroundColor: Colors.purpleAccent,
-  //                     //       ),
-  //                     //     ),
-  //                     //   if (_currentWordEnd != null)
-  //                     //     TextSpan(text: givtext.substring(_currentWordEnd!),),
-  //                     // ],
-  //                     //                 children: [
-  //                     //                   TextSpan(text: givtext.substring(0,_currentWordStart)),
-  //                     //                   if(_currentWordStart!=null)
-  //                     //                     TextSpan(text: givtext.substring(_currentWordStart!,_currentWordEnd),
-  //                     // style: GoogleFonts.sora(
-  //                     //   fontSize: 24,
-  //                     //   color:Colors.white,
-  //                     //   backgroundColor: Colors.purpleAccent,
-  //                     // ),),
-  //                     //                   if(_currentWordEnd!=null)
-  //                     //                     TextSpan(text: givtext.substring((_currentWordEnd!)  ,),),
-  //                     //
-  //                     //                 ]
-  //                   )),
-  //             ],
-  //           ),
-  //         ),
-  //         floatingActionButton: FloatingActionButton(
-  //           backgroundColor: buttonColor,
-  //           tooltip: 'Increment',
-  //           onPressed: () {
-  //             Navigator.of(context).pop();
-  //             stopspeaking();
-  //           },
-  //           child: const Icon(Icons.close, color: Colors.white, size: 28),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+
+  
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -201,56 +179,72 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
         elevation: 3,
         backgroundColor: Colors.white,
         centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Mock",
+        automaticallyImplyLeading: true,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Mock",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 21,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                    "Master",
+                    // textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w700,
+                      color: buttonColor,
                       fontSize: 21,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
-                    child: Text(
-                      "Master",
-                      // textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        color: buttonColor,
-                        fontSize: 21,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-      body: ListView(
-        children: [
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 5),
-          //   child: Text("Recommended questions", style:GoogleFonts.sora(
-          //     color: Colors.black,
-          //     fontWeight: FontWeight.w600,
-          //     fontSize:16,
-          //   ),),
-          // ),
-          QuestionAnswers(
-              "What motivated you to specialize in Flutter Development❓")
-        ],
-      ),
+
+      body: FutureBuilder<Map<String, dynamic>?>(
+          future: sendQuestionData(widget.jobdescription,
+              widget.jobrequirements, widget.level, widget.emailid, ),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              print(widget.jobdescription);
+              print(widget.level);
+              return ListView.builder(
+                  itemCount: snapshot.data?["questions"].length,
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    print(snapshot.data);
+                    print(snapshot.data?["questions"][0]["Question"]);
+                    return Column(
+                      children: [
+                        QuestionAnswers(
+                            snapshot.data?["questions"][index]["Question"],
+                            snapshot.data?["questions"][index]["Answer"],
+                            snapshot.data?["questions"][index]["Type"],index,
+                            snapshot.data?["interview_id"],widget.emailid,widget.level,
+                        )
+
+                      ],
+                    );
+                  });
+            }
+            return Text("Fields Are Empty");
+          }),
     );
   }
 }

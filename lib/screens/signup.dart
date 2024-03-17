@@ -44,7 +44,6 @@ class _RegisterState extends State<Register> {
             SizedBox(
               height: 30,
             ),
-
             Form(
                 key: _formKey,
                 child: Column(
@@ -52,8 +51,6 @@ class _RegisterState extends State<Register> {
                     Padding(
                       padding: const EdgeInsets.all(14.0),
                       child: TextFormField(
-                        // keyboardType: TextInputType.none,
-
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           prefixIcon: Icon(Icons.person),
@@ -61,7 +58,6 @@ class _RegisterState extends State<Register> {
                           fillColor: Colors.black12,
                           // border: OutlineInputBorder(),
                           hintText: "Name",
-
                         ),
                         validator:(value){
                           if(value!.isEmpty){
@@ -97,16 +93,12 @@ class _RegisterState extends State<Register> {
                       child: TextFormField(
                         // keyboardType: TextInputType.none,
                         controller: passController,
-
                         obscureText: true,
                         decoration:const InputDecoration(
                           prefixIcon: Icon(Icons.lock),
                           filled: true,
-// helperText: "Enter a strong password",
-
                           fillColor: Colors.black12,
                           border: InputBorder.none,
-
                           hintText: "password",
                         ),
                       ),
