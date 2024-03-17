@@ -1,6 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:mock_master/screens/question_answer_sliding_panel.dart';
+import 'package:mock_master/screens/sample.dart';
+
 import 'package:mock_master/apis/jobdescriptionapi.dart';
+
 import 'package:mock_master/utils/colors.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -22,7 +29,22 @@ class QuestionsAnswers extends StatefulWidget {
 }
 
 class _QuestionsAnswersState extends State<QuestionsAnswers> {
+  String givtext = "I trust this message finds you in good spirits ";
+
   @override
+  void initState() {
+    // flutterTts.setProgressHandler((text, start, end, word) {
+    //   setState(() {
+    //     _currentWordStart = start;
+    //     _currentWordEnd = end;
+    //   });
+    // });
+    super.initState();
+  }
+
+
+  @override
+
   Widget QuestionAnswers(String question, String answer, String domain,int index, String interviewId,String email,String level) {
     var size = MediaQuery.of(context).size;
     return Padding(
@@ -36,6 +58,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               Container(
                 decoration: BoxDecoration(
                     color: buttonColor,
@@ -58,6 +81,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                 ),
               ),
               SizedBox(
+
                 height: size.height * 0.01,
               ),
               Text(
@@ -77,6 +101,8 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                   IconButton(
                       onPressed: () {
 
+                        _showBottomSheet(context);
+
                       },
                       icon: Icon(
                         Icons.mic,
@@ -87,7 +113,10 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                     width: size.width * 0.03,
                   ),
                   IconButton(
+
+                 
                       onPressed: () {},
+
                       icon: FaIcon(
                         FontAwesomeIcons.robot,
                         size: 20,
@@ -126,6 +155,20 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
           ),
         ),
       ),
+    );
+  }
+
+
+  
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheetModal(
+          text: givtext,
+        );
+      },
     );
   }
 
@@ -169,6 +212,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
           ],
         ),
       ),
+
       body: FutureBuilder<Map<String, dynamic>?>(
           future: sendQuestionData(widget.jobdescription,
               widget.jobrequirements, widget.level, widget.emailid, ),
